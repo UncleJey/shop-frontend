@@ -1,0 +1,135 @@
+.product-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.main-image-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    margin: 0;
+  }
+}
+
+.main-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+
+  &.prev { left: 10px; }
+  &.next { right: 10px; }
+
+  &:hover {
+    background: white;
+  }
+}
+
+.thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  max-width: 500px;
+
+  @media (min-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0;
+  }
+}
+
+.thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s, transform 0.2s;
+
+  &.active,
+  &:hover {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.detail-info {
+  flex: 1;
+  min-width: 300px;
+
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .price {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #e74c3c;
+    margin: 1rem 0;
+  }
+
+  .description {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #555;
+    margin: 1.5rem 0;
+  }
+
+  .buy-button {
+    display: inline-block;
+    background: #4a69bd;
+    color: white;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #3c5aa6;
+    }
+  }
+}
+
+.not-found {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+  color: #888;
+}

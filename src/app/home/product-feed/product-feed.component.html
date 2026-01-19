@@ -1,0 +1,24 @@
+<cdk-virtual-scroll-viewport
+  itemSize="320"
+  minBufferPx="600"
+  maxBufferPx="1200"
+  class="feed-viewport"
+  *ngIf="isBrowser"
+  (scrolledIndexChange)="onScroll()">
+
+  <div class="product-grid">
+    <a *cdkVirtualFor="let product of products"
+       [routerLink]="['/product', product.id]"
+       class="product-card-link">
+      <div class="product-card">
+        <img [src]="product.images[0]" [alt]="product.name" class="product-image" />
+        <h3 class="product-name">{{ product.name }}</h3>
+        <p class="product-price">{{ product.price | number }} {{ product.currency }}</p>
+      </div>
+    </a>
+  </div>
+
+  <div *ngIf="loading && products.length > 0" class="loading-indicator">
+    Загрузка...
+  </div>
+</cdk-virtual-scroll-viewport>

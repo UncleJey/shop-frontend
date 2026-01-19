@@ -1,0 +1,20 @@
+{
+  "projects": {
+  "shop-frontend": {
+    "architect": {
+      "serve-ssr": {
+        "builder": "@nguniversal/builders:ssr-dev-server",
+          "options": {
+          "browserTarget": "shop-frontend:build",
+            "serverTarget": "shop-frontend:server",
+            "ssl": true,
+            "sslCert": "../cert/localhost.pfx",
+            "sslKey": "../cert/localhost.pfx",
+            "sslPassphrase": "123456",
+            "proxyConfig": "proxy.conf.json"
+        }
+      }
+    }
+  }
+}
+}

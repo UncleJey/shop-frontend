@@ -1,0 +1,40 @@
+<div class="product-detail" *ngIf="product; else notFound">
+  <!-- Основное изображение -->
+  <div class="main-image-container">
+    <button class="nav-btn prev" (click)="prevImage()" *ngIf="product.images.length > 1">
+      ‹
+    </button>
+
+    <img
+      [src]="product.images[currentImageIndex]"
+      [alt]="product.name"
+      class="main-image" />
+
+    <button class="nav-btn next" (click)="nextImage()" *ngIf="product.images.length > 1">
+      ›
+    </button>
+  </div>
+
+  <!-- Миниатюры -->
+  <div class="thumbnails" *ngIf="product.images.length > 1">
+    <img
+      *ngFor="let image of product.images; let i = index"
+      [src]="image"
+      [alt]="'Изображение ' + (i + 1)"
+      class="thumbnail"
+      [class.active]="i === currentImageIndex"
+      (click)="selectImage(i)" />
+  </div>
+
+  <!-- Инфо -->
+  <div class="detail-info">
+    <h1>{{ product.name }}</h1>
+    <p class="price">{{ product.price | number }} {{ product.currency }}</p>
+    <p class="description">{{ product.description }}</p>
+    <a [href]="product.buyLink" target="_blank" class="buy-button">Купить в VK</a>
+  </div>
+</div>
+
+<ng-template #notFound>
+  <div class="not-found">Товар не найден</div>
+</ng-template>
