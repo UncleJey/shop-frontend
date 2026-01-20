@@ -16,7 +16,7 @@ import { Component, Input, ViewChild, AfterViewInit, Output, EventEmitter } from
 
       <div class="product-grid">
         <a *cdkVirtualFor="let product of products; let i = index"
-           [routerLink]="['/product', product.id]"
+           [routerLink]="['/product', productSlug(product)]"
            (click)="saveScrollIndex(i)"
            class="product-card-link">
           <div class="product-card">
@@ -37,22 +37,19 @@ export class VirtualFeedComponent implements AfterViewInit {
   @ViewChild(CdkVirtualScrollViewport) viewport?: CdkVirtualScrollViewport;
 
   @Input() products: Product[] = [];
-  @Input() loading = false;                // <-- добавлено для совместимости
-  @Output() onScroll = new EventEmitter<void>(); // <-- добавлено для совместимости
+  @Input() loading = false;
+  @Output() onScroll = new EventEmitter<void>();
 
   // сохраняем индекс прокрутки в sessionStorage
   saveScrollIndex(index: number | undefined): void {
     if (typeof index === 'number' && !Number.isNaN(index)) {
       try {
         sessionStorage.setItem('productFeedScrollIndex', String(index));
-      } catch (e) {
-        // ignore storage errors (private mode etc.)
-      }
+      } catch (e) { /* ignore */ }
     }
   }
 
   handleScroll(index: number | undefined): void {
-    // сохраняем индекс и уведомляем слушателей (например, для подгрузки)
     this.saveScrollIndex(index);
     this.onScroll.emit();
   }
@@ -62,13 +59,26 @@ export class VirtualFeedComponent implements AfterViewInit {
       const raw = sessionStorage.getItem('productFeedScrollIndex');
       const idx = raw ? parseInt(raw, 10) : NaN;
       if (!Number.isNaN(idx) && this.viewport) {
-        // отложенно, чтобы данные уже были вьюпортированы
-        setTimeout(() => {
-          this.viewport?.scrollToIndex(idx, 'auto');
-        }, 0);
+        setTimeout(() => this.viewport?.scrollToIndex(idx, 'auto'), 0);
       }
-    } catch (e) {
-      // ignore
-    }
+    } catch (e) { /* ignore */ }
+  }
+
+  // формируем seo-friendly slug: "<id>-<slugified-name>"
+  productSlug(p: Product): string {
+    const slugPart = p.sku && p.sku.trim().length > 0 ? p.sku : this.slugify(p.name || '');
+    return `${p.id}-${slugPart}`;
+  }
+
+  private slugify(text: string): string {
+    return text
+      .toString()
+      .normalize('NFKD')            // удаление диакритики
+      .replace(/[\u0300-\u036F]/g, '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')  // заменяем всё не-алфавитно-цифровое на '-'
+      .replace(/^-+|-+$/g, '')
+      .replace(/-{2,}/g, '-');
   }
 }

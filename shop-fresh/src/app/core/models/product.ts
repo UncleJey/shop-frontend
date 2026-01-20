@@ -6,6 +6,8 @@ export interface Product {
   images: string[];
   description: string;
   buyLink: string;
+  sku?: string;           // добавлено — с��ответствует API
+  categoryName?: string;  // опционально, если нужно
 }
 
 export interface ProductFeedResponse {
