@@ -77,23 +77,11 @@
           },
           "options": {
             "browserTarget": "shop-frontend:build",
-            "serverTarget": "shop-frontend:server",
-            "ssl": true,
-            "sslCert": "../cert/localhost.crt",
-            "sslKey": "../cert/localhost.key",
-            "proxyConfig": "proxy.conf.json"
-          }
-        },
-        "server": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/shop-frontend/server",
-            "main": "server.ts",
-            "tsConfig": "tsconfig.server.json"
+            "serverTarget": "shop-frontend:build"
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:server",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "shop-frontend:build:production"
