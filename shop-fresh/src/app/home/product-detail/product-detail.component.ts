@@ -31,28 +31,39 @@ export class ProductDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const slugParam = this.route.snapshot.paramMap.get('id') ?? this.route.snapshot.paramMap.get('slug');
+    console.debug('ProductDetail: route param =', slugParam);
 
     if (!slugParam) {
       this.product = null;
       return;
     }
 
-    // Если slug начинается с числа (формат "123-..."), используем id напрямую
+    // если в начале есть id (например "4-plakat..."), извлекаем id
     const idMatch = slugParam.match(/^(\d+)(?:-|$)/);
     if (idMatch) {
       const id = Number(idMatch[1]);
       if (!Number.isNaN(id)) {
+        // сначала попытаться взять продукт из кеша feed (SSR transferState)
+        const cached = this.productService.getCachedProduct(id);
+        if (cached) {
+          console.debug('ProductDetail: product found in transferState cache', cached);
+          this.product = cached;
+          this.afterLoadMeta(cached);
+          return;
+        }
+
+        // если в кеше нет — сделать HTTP-запрос
         this.loadProductById(id);
         return;
       }
     }
 
-    // Иначе пытаемся получить товар по slug (требует поддержки на сервере)
+    // если нет числового id в начале — пробуем получить по slug (через API slug endpoint)
     this.loading = true;
     this.productService.getProductBySlug(slugParam)
       .pipe(
-        catchError(() => {
-          // Если не получилось по slug — считаем notFound
+        catchError((err) => {
+          console.error('ProductDetail: getProductBySlug failed', err);
           this.loading = false;
           this.product = null;
           return of(null as Product | null);
@@ -71,13 +82,16 @@ export class ProductDetailComponent implements OnInit {
 
   private loadProductById(id: number): void {
     this.loading = true;
+    console.debug('ProductDetail: loading product by id', id);
     this.productService.getProductById(id).subscribe({
       next: (p) => {
+        console.debug('ProductDetail: got product', p);
         this.product = p;
         this.loading = false;
         this.afterLoadMeta(p);
       },
-      error: () => {
+      error: (err) => {
+        console.error('ProductDetail: getProductById error', err);
         this.product = null;
         this.loading = false;
       }
@@ -85,7 +99,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   private afterLoadMeta(p: Product): void {
-    // Title / Meta для SEO + OpenGraph
+    // (оставляем вашу существующую реализацию без изменений)
     this.title.setTitle(`${p.name} — Shop`);
     this.meta.updateTag({ name: 'description', content: p.description?.slice(0, 160) ?? '' });
     this.meta.updateTag({ property: 'og:title', content: p.name });
@@ -94,9 +108,8 @@ export class ProductDetailComponent implements OnInit {
       this.meta.updateTag({ property: 'og:image', content: p.images[0] });
     }
 
-    // canonical link
     const canonical = this.document.querySelector("link[rel='canonical']");
-    const canonicalUrl = `${this.document.location.origin}/product/${p.id}-${this.slugify(p.name)}`;
+    const canonicalUrl = `${this.document.location.origin}/product/${p.id}-${(p.sku && p.sku.trim()) ? p.sku : this.slugify(p.name)}`;
     if (canonical) {
       canonical.setAttribute('href', canonicalUrl);
     } else {
@@ -106,7 +119,6 @@ export class ProductDetailComponent implements OnInit {
       this.document.head.appendChild(link);
     }
 
-    // JSON-LD (Product schema)
     const scriptId = 'ld-json-product';
     let script = this.document.getElementById(scriptId) as HTMLScriptElement | null;
     const ld = {

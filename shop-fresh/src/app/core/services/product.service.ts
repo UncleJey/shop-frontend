@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { Product } from '../models/product';
-import { TransferState, makeStateKey } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable, of} from 'rxjs';
+import {Product} from '../models/product';
+import {TransferState, makeStateKey} from '@angular/core';
 import { inject } from '@angular/core';
 import { tap, catchError } from 'rxjs/operators';
 
@@ -19,7 +19,8 @@ export class ProductService {
   private http = inject(HttpClient);
   private transferState = inject(TransferState);
 
-  constructor(private pHttp: HttpClient) {}
+  constructor(private pHttp: HttpClient) {
+  }
 
   private FEED_KEY = makeStateKey<ProductFeedResponse>('feed');
 
@@ -48,16 +49,26 @@ export class ProductService {
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 
-  // Попытка получить товар по slug (например, "product-name" или "123-product-name").
-  // Бекенд должен поддержать /api/product/slug/{slug} для прямого поиска по slug.
   getProductBySlug(slug: string): Observable<Product> {
-    // Пытаемся вызвать endpoint, который должен быть добавлен на беке.
     return this.http.get<Product>(`${this.apiUrl}/slug/${encodeURIComponent(slug)}`)
       .pipe(
         catchError((err) => {
-          // проброс ошибки дальше — вызывающая сторона может попробовать fallback (например, извлечь id)
           throw err;
         })
       );
+  }
+
+  // Новый: попытка взять продукт из transferState (SSR) кеша фида
+  getCachedProduct(id: number): Product | null {
+    try {
+      const cached = this.transferState.get(this.FEED_KEY, null as any) as ProductFeedResponse | null;
+      if (cached && Array.isArray(cached.items)) {
+        const found = cached.items.find(it => it && it.id === id);
+        return found ?? null;
+      }
+    } catch (e) {
+      // ignore
+    }
+    return null;
   }
 }
