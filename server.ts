@@ -10,7 +10,6 @@ export function app(): express.Express {
   const server = express();
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));
   const browserDistFolder = resolve(serverDistFolder, '../browser');
-  //const indexHtml = join(serverDistFolder, 'browser.index.html');
   const indexHtml = join(browserDistFolder, 'index.html');
 
   const commonEngine = new CommonEngine();
@@ -54,18 +53,5 @@ function run(): void {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
 }
-
-// Webpack will replace 'require' with '__webpack_require__'
-// '__non_webpack_require__' is a proxy to Node.js 'require' below.
-declare const __non_webpack_require__: NodeRequire;
-const bootstrapModule = __non_webpack_require__('module');
-const originalRequire = bootstrapModule.prototype.require;
-bootstrapModule.prototype.require = function (id: string) {
-  if (id === './main.server') {
-    return bootstrap;
-  } else {
-    return originalRequire.apply(this, arguments);
-  }
-};
 
 run();
