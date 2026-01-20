@@ -32,7 +32,7 @@ export class ProductService {
     }
 
     const apiUrl = typeof window === 'undefined'
-      ? 'http://localhost:5000/api/product'
+      ? 'http://localhost:5141/api/product'
       : '/api/product';
 
     return this.http.get<ProductFeedResponse>(
@@ -47,23 +47,6 @@ export class ProductService {
   }
 
   getProductById(id: number): Observable<Product> {
-    // Если используешь mock:
-    /*    return of({
-          id,
-          name: `Детальный товар #${id}`,
-          price: 1499,
-          currency: 'RUB',
-          images: [
-            'https://via.placeholder.com/400?text=Детальный+1',
-            'https://via.placeholder.com/400?text=Детальный+2',
-            'https://via.placeholder.com/400?text=Детальный+3',
-            'https://via.placeholder.com/400?text=Детальный+4',
-          ],
-          description: 'Полное описание...',
-          buyLink: `https://vk.com/app123?product=${id}`
-        });
-    */
-    // Когда будет бэкенд:
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 

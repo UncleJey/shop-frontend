@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "shop-frontend": {
+    "shop-fresh": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/shop-frontend",
+            "outputPath": "dist/shop-fresh",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -36,10 +36,8 @@
             ],
             "scripts": [],
             "server": "src/main.server.ts",
-            "prerender": false,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "prerender": true,
+            "ssr": true
           },
           "configurations": {
             "production": {
@@ -65,32 +63,40 @@
           },
           "defaultConfiguration": "production"
         },
-        "serve-ssr": {
-          "builder": "@angular-devkit/build-angular:ssr-dev-server",
-          "configurations": {
-            "production": {
-              "buildTarget": "shop-frontend:build:production"
-            },
-            "development": {
-              "buildTarget": "shop-frontend:build:development"
-            }
-          },
-          "options": {
-            "browserTarget": "shop-frontend:build",
-            "serverTarget": "shop-frontend:build"
-          }
-        },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "shop-frontend:build:production"
+              "buildTarget": "shop-fresh:build:production"
             },
             "development": {
-              "buildTarget": "shop-frontend:build:development"
+              "buildTarget": "shop-fresh:build:development"
             }
           },
           "defaultConfiguration": "development"
+        },
+        "serve-ssr": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "defaultConfiguration": "development",
+          "options": {
+            "buildTarget": "shop-fresh:build"
+          },
+          "configurations": {
+            "development": {
+              "buildTarget": "shop-fresh:build:development"
+            },
+            "production": {
+              "buildTarget": "shop-fresh:build:production"
+            }
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/shop-fresh/server",
+            "main": "server.ts",
+            "tsConfig": "tsconfig.server.json"
+          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"
