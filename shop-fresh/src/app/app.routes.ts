@@ -8,8 +8,11 @@ import {CreateWizardComponent} from './create-wizard/create-wizard.component';
 export const routes: Routes = [
   {path: '', component: ProductFeedComponent}, // лента
   {path: 'product/:slug', component: ProductDetailComponent}, // детализация
-  {path: '**', redirectTo: ''},
   {path: 'create-wizard', component: CreateWizardComponent}, // добавить
-  {path: 'products', component: MyProductsComponent} // мои товары
+  {path: 'products', component: MyProductsComponent}, // мои товары
+
+
+  // Маршрут-перехватчик ВСЕГДА должен быть последним
+  {path: '**', redirectTo: ''},
 ];
 

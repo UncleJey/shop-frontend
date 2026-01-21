@@ -71,7 +71,7 @@
         <h3>{{ firstFormGroup.value.title }}</h3>
         <p><strong>Цена:</strong> {{ firstFormGroup.value.price }}</p>
         <p><strong>Описание:</strong> {{ firstFormGroup.value.description || 'Нет описания' }}</p>
-        <img [src]="secondFormGroup.value.images[0]" style="max-width: 200px; border-radius: 8px;" alt="Preview">
+        <img [src]="secondFormGroup.value.images" style="max-width: 200px; border-radius: 8px;" alt="Preview">
       </div>
 
       <div class="button-row">
