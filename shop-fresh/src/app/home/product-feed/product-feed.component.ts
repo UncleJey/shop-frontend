@@ -1,11 +1,12 @@
 // product-feed.component.ts
-import { Component, OnInit, ViewChild, ViewContainerRef, ComponentFactoryResolver, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Product, ProductFeedResponse } from '../../core/models/product';
-import { ProductService } from '../../core/services/product.service';
-import { RouterLink } from '@angular/router';
-import { isPlatformBrowser } from '@angular/common';
-import { PLATFORM_ID, Inject } from '@angular/core';
+import {Component, OnInit, ViewChild, ViewContainerRef, ComponentFactoryResolver, AfterViewInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Product, ProductFeedResponse} from '../../core/models/product';
+import {ProductService} from '../../core/services/product.service';
+import {RouterLink} from '@angular/router';
+import {isPlatformBrowser} from '@angular/common';
+import {PLATFORM_ID, Inject} from '@angular/core';
+import {HeaderComponent} from '../../header/header.component';
 
 @Component({
   selector: 'app-product-feed',
@@ -15,7 +16,7 @@ import { PLATFORM_ID, Inject } from '@angular/core';
     <!-- Fallback для SSR -->
     <div *ngIf="!isBrowser" class="product-grid">
       <div *ngFor="let product of products.slice(0, 10)" class="product-card">
-        <img [src]="product.images[0]" [alt]="product.name" class="product-image" />
+        <img [src]="product.images[0]" [alt]="product.name" class="product-image"/>
         <h3 class="product-name">{{ product.name }}</h3>
         <p class="product-price">{{ product.price | number }} {{ product.currency }}</p>
       </div>
@@ -23,7 +24,7 @@ import { PLATFORM_ID, Inject } from '@angular/core';
   `,
   styleUrls: ['./product-feed.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterLink]
+  imports: [CommonModule, RouterLink, HeaderComponent]
 })
 export class ProductFeedComponent implements OnInit, AfterViewInit {
   isBrowser = false;
@@ -34,7 +35,7 @@ export class ProductFeedComponent implements OnInit, AfterViewInit {
   loading = false;
   error: string | null = null;
 
-  @ViewChild('virtualContainer', { read: ViewContainerRef }) container!: ViewContainerRef;
+  @ViewChild('virtualContainer', {read: ViewContainerRef}) container!: ViewContainerRef;
 
   constructor(
     private productService: ProductService,

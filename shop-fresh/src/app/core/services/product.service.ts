@@ -3,8 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {Product} from '../models/product';
 import {TransferState, makeStateKey} from '@angular/core';
-import { inject } from '@angular/core';
-import { tap, catchError } from 'rxjs/operators';
+import {inject} from '@angular/core';
+import {tap, catchError} from 'rxjs/operators';
 
 export interface ProductFeedResponse {
   items: Product[];
@@ -47,6 +47,30 @@ export class ProductService {
 
   getProductById(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
+  }
+
+  /*
+  * Мои продукты
+  * */
+  getMyProducts(page: number, pageSize: number = 20): Observable<ProductFeedResponse> {
+    const cached = this.transferState.get(this.FEED_KEY, null as any);
+    if (cached) {
+      return of(cached);
+    }
+
+    const apiUrl = typeof window === 'undefined'
+      ? 'http://localhost:5141/api/product'
+      : '/api/product';
+
+    return this.http.get<ProductFeedResponse>(
+      `${apiUrl}/feed?page=${page}&pageSize=${pageSize}`
+    ).pipe(
+      tap(data => {
+        if (typeof window === 'undefined') {
+          this.transferState.set(this.FEED_KEY, data);
+        }
+      })
+    );
   }
 
   getProductBySlug(slug: string): Observable<Product> {

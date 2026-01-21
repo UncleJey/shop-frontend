@@ -1,0 +1,31 @@
+<div class="container">
+  <h2>Мои товары</h2>
+
+  <!-- Заглушка, если товаров нет -->
+  <div class="empty-state" *ngIf="products$ | async as products; else loading">
+    <div *ngIf="products.length === 0">
+      <p>У вас пока нет созданных товаров.</p>
+      <a routerLink="/create-wizard" class="btn">Создать первый товар</a>
+    </div>
+
+    <!-- Список товаров -->
+    <div class="products-grid" *ngIf="products.length > 0">
+      <div class="product-card" *ngFor="let product of products">
+        <div class="card-image">
+          <!-- Заглушка, если картинки нет -->
+          <img [src]="product.image || 'assets/placeholder.png'" [alt]="product.title">
+        </div>
+        <div class="card-content">
+          <h3>{{ product.title }}</h3>
+          <p class="price">{{ product.price | currency:'RUB' }}</p>
+          <p class="description">{{ product.description | slice:0:80 }}...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Индикатор загрузки -->
+  <ng-template #loading>
+    <p>Загрузка товаров...</p>
+  </ng-template>
+</div>

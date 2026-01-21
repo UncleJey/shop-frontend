@@ -1,0 +1,76 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: sticky; // Чтобы хедер прилипал при скролле
+  top: 0;
+  z-index: 1000;
+  margin-bottom: 2rem;
+
+  .logo h1 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: #3f51b5; // Angular blue color
+    font-weight: 700;
+  }
+
+  .nav-menu {
+    display: flex;
+    gap: 2rem;
+
+    a {
+      text-decoration: none;
+      color: #555;
+      font-weight: 500;
+      font-size: 1rem;
+      padding-bottom: 4px;
+      transition: all 0.2s ease-in-out;
+      position: relative;
+
+      // Подчеркивание при наведении
+      &::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: #3f51b5;
+        transition: width 0.2s ease-in-out;
+      }
+
+      &:hover {
+        color: #3f51b5;
+
+        &::after {
+          width: 100%;
+        }
+      }
+
+      // Стили для активной страницы (та, где мы сейчас)
+      &.active {
+        color: #3f51b5;
+        font-weight: 600;
+
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+// Адаптив для мобильных (простая версия)
+@media (max-width: 600px) {
+  .app-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav-menu {
+    gap: 1rem;
+  }
+}

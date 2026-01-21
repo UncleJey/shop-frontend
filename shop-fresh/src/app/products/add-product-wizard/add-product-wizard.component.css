@@ -1,0 +1,21 @@
+.wizard {
+    max-width: 720px;
+    margin: 16px;
+}
+
+.previews img {
+    max-width: 120px;
+    max-height: 120px;
+    margin: 6px;
+    border: 1px solid #ddd;
+}
+
+.actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    padding: 8px 12px;
+}
