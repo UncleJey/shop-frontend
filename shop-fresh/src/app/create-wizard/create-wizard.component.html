@@ -1,6 +1,7 @@
 <div class="container">
   <h2>Создание нового товара</h2>
 
+  <!-- ЭТОТ ТЕГ ОБЯЗАТЕЛЕН (ОБЕРТКА) -->
   <mat-stepper [linear]="isLinear" #stepper>
 
     <!-- ШАГ 1: Основная информация -->
@@ -34,29 +35,43 @@
         </mat-form-field>
 
         <div class="button-row">
+          <button mat-button color="warn" (click)="cancel()">Закрыть</button>
           <button mat-button matStepperNext [disabled]="!firstFormGroup.valid">Далее</button>
         </div>
       </form>
     </mat-step>
 
-    <!-- ШАГ 2: Изображения -->
-    <mat-step [stepControl]="secondFormGroup" label="Медиа">
+    <!-- ШАГ 2: Загрузка файлов -->
+    <mat-step label="Медиа">
       <form [formGroup]="secondFormGroup">
         <ng-template matStepLabel>Фотографии</ng-template>
 
-        <p>Вставьте ссылку на главное изображение товара.</p>
+        <p>Выберите до 10 изображений товара.</p>
 
-        <mat-form-field appearance="fill">
-          <mat-label>URL Картинки</mat-label>
-          <input matInput placeholder="https://..." formControlName="imageUrl" required>
-          <mat-error *ngIf="secondFormGroup.get('imageUrl')?.hasError('required')">
-            Введите ссылку на картинку
-          </mat-error>
-        </mat-form-field>
+        <!-- Контейнер превью -->
+        <div class="previews-grid">
+          <div *ngFor="let preview of imagePreviews; let i = index" class="preview-item">
+            <img [src]="preview" class="preview-image">
+            <button mat-icon-button class="remove-btn" (click)="removeFile(i)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
 
-        <div class="button-row">
+        <!-- Кнопка для загрузки -->
+        <button mat-raised-button color="accent" (click)="fileInput.click()">
+          <mat-icon>folder_open</mat-icon>
+          Выбрать файлы
+        </button>
+
+        <!-- Скрытый input для выбора файлов -->
+        <input type="file" #fileInput (change)="onFilesSelected($event)" multiple accept="image/*"
+               style="display: none;">
+
+        <div class="button-row" style="margin-top: 1rem;">
+          <button mat-button color="warn" (click)="cancel()">Закрыть</button>
           <button mat-button matStepperPrevious>Назад</button>
-          <button mat-button matStepperNext [disabled]="!secondFormGroup.valid">Далее</button>
+          <button mat-button matStepperNext>Далее</button>
         </div>
       </form>
     </mat-step>
@@ -71,7 +86,11 @@
         <h3>{{ firstFormGroup.value.title }}</h3>
         <p><strong>Цена:</strong> {{ firstFormGroup.value.price }}</p>
         <p><strong>Описание:</strong> {{ firstFormGroup.value.description || 'Нет описания' }}</p>
-        <img [src]="secondFormGroup.value.images" style="max-width: 200px; border-radius: 8px;" alt="Preview">
+
+        <!-- Сетка превью для финального просмотра -->
+        <div class="final-previews">
+          <img *ngFor="let preview of imagePreviews" [src]="preview" class="final-preview-img">
+        </div>
       </div>
 
       <div class="button-row">
@@ -79,5 +98,6 @@
         <button mat-raised-button color="primary" (click)="onSubmit()">Создать товар</button>
       </div>
     </mat-step>
-  </mat-stepper>
+
+  </mat-stepper> <!-- КОНЕЦ ОБЕРТКИ -->
 </div>
