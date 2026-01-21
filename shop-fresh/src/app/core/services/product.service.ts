@@ -95,4 +95,18 @@ export class ProductService {
     }
     return null;
   }
+
+  // Создание товара
+  createProduct(product: any): Observable<Product> {
+    // Отправляем POST запрос на адрес /api/product
+    // Прокси (proxy.conf.json) перенаправит его на твой бэкенд
+    return this.http.post<Product>(this.apiUrl, product)
+      .pipe(
+        catchError((err) => {
+          console.error('Ошибка при создании товара:', err);
+          // Можно добавить здесь вывод ошибки пользователю через alert или Toast
+          throw err;
+        })
+      );
+  }
 }

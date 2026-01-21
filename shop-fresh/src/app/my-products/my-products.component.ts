@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ProductService } from '../core/services/product.service';
-import { Product } from '../core/models/product'; // Укажи правильный путь к модели Product
-import { Observable } from 'rxjs';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ProductService} from '../core/services/product.service';
+import {Product} from '../core/models/product'; // Укажи правильный путь к модели Product
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators'
 
 @Component({
   selector: 'app-my-products',
@@ -15,10 +16,14 @@ export class MyProductsComponent implements OnInit {
 
   products$: Observable<Product[]> | undefined;
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService) {
+  }
 
   ngOnInit(): void {
     // Вызываем метод, который мы проверили в шаге 1
-    this.products$ = this.productService.getMyProducts(0);
+    this.products$ = this.productService.getMyProducts(0).pipe(
+      // <--- 2. ИЗВЛЕКАЕМ МАССИВ ИЗ ОТВЕТА
+      map(response => response.items)
+    );
   }
 }

@@ -1,0 +1,83 @@
+<div class="container">
+  <h2>Создание нового товара</h2>
+
+  <mat-stepper [linear]="isLinear" #stepper>
+
+    <!-- ШАГ 1: Основная информация -->
+    <mat-step [stepControl]="firstFormGroup" label="Основное">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Информация о товаре</ng-template>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Название</mat-label>
+          <input matInput placeholder="Например, iPhone 15" formControlName="title" required>
+          <mat-error *ngIf="firstFormGroup.get('title')?.hasError('required')">
+            Введите название товара
+          </mat-error>
+        </mat-form-field>
+
+        <br>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Цена</mat-label>
+          <input matInput placeholder="0" formControlName="price" type="number" required>
+          <mat-error *ngIf="firstFormGroup.get('price')?.hasError('required')">
+            Введите цену
+          </mat-error>
+        </mat-form-field>
+
+        <br>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Описание</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+
+        <div class="button-row">
+          <button mat-button matStepperNext [disabled]="!firstFormGroup.valid">Далее</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- ШАГ 2: Изображения -->
+    <mat-step [stepControl]="secondFormGroup" label="Медиа">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Фотографии</ng-template>
+
+        <p>Вставьте ссылку на главное изображение товара.</p>
+
+        <mat-form-field appearance="fill">
+          <mat-label>URL Картинки</mat-label>
+          <input matInput placeholder="https://..." formControlName="imageUrl" required>
+          <mat-error *ngIf="secondFormGroup.get('imageUrl')?.hasError('required')">
+            Введите ссылку на картинку
+          </mat-error>
+        </mat-form-field>
+
+        <div class="button-row">
+          <button mat-button matStepperPrevious>Назад</button>
+          <button mat-button matStepperNext [disabled]="!secondFormGroup.valid">Далее</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- ШАГ 3: Просмотр и отправка -->
+    <mat-step label="Просмотр">
+      <ng-template matStepLabel>Проверка данных</ng-template>
+
+      <p>Пожалуйста, проверьте данные перед сохранением:</p>
+
+      <div class="review-box">
+        <h3>{{ firstFormGroup.value.title }}</h3>
+        <p><strong>Цена:</strong> {{ firstFormGroup.value.price }}</p>
+        <p><strong>Описание:</strong> {{ firstFormGroup.value.description || 'Нет описания' }}</p>
+        <img [src]="secondFormGroup.value.images[0]" style="max-width: 200px; border-radius: 8px;" alt="Preview">
+      </div>
+
+      <div class="button-row">
+        <button mat-button matStepperPrevious>Назад</button>
+        <button mat-raised-button color="primary" (click)="onSubmit()">Создать товар</button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</div>

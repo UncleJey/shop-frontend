@@ -11,6 +11,7 @@ import {HeaderComponent} from '../../header/header.component';
 @Component({
   selector: 'app-product-feed',
   template: `
+    <app-header></app-header>
     <div #virtualContainer></div>
 
     <!-- Fallback для SSR -->
@@ -24,7 +25,11 @@ import {HeaderComponent} from '../../header/header.component';
   `,
   styleUrls: ['./product-feed.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterLink, HeaderComponent]
+  imports: [
+    CommonModule,
+    RouterLink,
+    HeaderComponent
+  ]
 })
 export class ProductFeedComponent implements OnInit, AfterViewInit {
   isBrowser = false;
